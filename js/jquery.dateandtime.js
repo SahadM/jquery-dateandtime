@@ -1,26 +1,32 @@
 /*
- *      Plugin dateTimed
- *      -------------------
+ *      Plugin date & time
+ *      ------------------
  *
  *      Manage datetime from input text
- *      display date and time splitted
+ *      display date and time singly
  */
 
 (function($) {
 	
-	$.fn.dateTimed = function() {
+	$.fn.dateAndTime = function() {
 
 		let elementMain = $(this);
-		// let elementMain = $('.date-timed');
 
 		// for each element, evalute date and time to split
-		elementMain.each(function(index, ele) {    
-			let element = $(ele),
-			 class_name = element.attr('class'),
-			       date = element.val().split(' ')[0],
-			       time = element.val().split(' ')[1] || '00:00', 
-	   css_class_custom = (class_name !== undefined || class_name.length > 0) ?
-			               class_name.replace(/js_datetime/, '') : '';
+		elementMain.each(function(index, ele) { 
+
+			let element = $(ele);
+
+			// check attribute class exits only
+			if (element.attr('class') === undefined || element.attr('class').length === 0) {
+				console.error('dateAndTime : You must have an attribute class to use this !');
+				return false;
+			}
+
+			let class_name       = element.attr('class');
+			let date             = element.val().split(' ')[0];
+			let time             = element.val().split(' ')[1] || '00:00'; 
+	   		let css_class_custom = class_name;
 			
 			// check the node type text
 			if (element.attr('type') !== 'text') {
@@ -30,7 +36,7 @@
 			
 			// remove class added on the main input hidden
 			if (css_class_custom.length > 0)
-			element.removeClass(css_class_custom);
+				element.removeClass(css_class_custom);
 
 			// put content raw html and fill classes added on the new inputs
 			// on elements jQuery
@@ -46,13 +52,11 @@
 				.hide();
 
 			// put event into the loop
-			// let date = '',
-			//	time = '';
 			$(eleDateTime, $(element).not('[done="true"]')).change(function(e) {
 				let currentDateTime = $(e.currentTarget),	
 				      selectElement = element;
 			
-				// visual setting
+				// set inputs hidden field
 				currentDateTime.attr('value', currentDateTime.val());				
 				if (currentDateTime.attr('type') === 'date') {		
 					date = currentDateTime.val();			
@@ -61,9 +65,6 @@
 					time = currentDateTime.val();
 				}
 				// set values on inputs
-				console.log('date :', date);
-				console.log('time :', time);
-
 				selectElement.attr('value', date + ' ' + time);
 								
 				return false;
@@ -71,7 +72,6 @@
 			}); 
 
 		});
-
 
 	}
 
